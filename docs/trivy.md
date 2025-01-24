@@ -12,6 +12,17 @@ Trivy est un outil open-source de scan de sécurité utilisé pour détecter les
 - Génération de rapports lisibles.
 - Intégration facile dans les pipelines CI/CD.
 
+## Installation de Trivy
+Pour installer Trivy sur Ubuntu :
+
+```bash
+sudo apt-get install wget gnupg
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+sudo apt-get update
+sudo apt-get install trivy
+```
+
 ## Utilisation de Trivy
 
 ### Commandes de base :
