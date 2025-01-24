@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+    tools { 
+        jdk 'JDK'
+        maven 'Maven3' }
+    
+    environment {
+        
+        SONAR_HOME = tool 'sonar-scanner'
+    }
+    
+    
+    
+    stages {
+        stage('Git checkout') {
+            steps {
+               git branch: 'main', url: 'https://github.com/jaiswaladi246/FullStack-Blogging-App.git'
+            }
+        }
+         stage('compile') {
+            steps {
+               sh 'mvn compile'
+               
+            }
+        }
+        stage('test') {
+            steps {
+               sh 'mvn test'
+               
+            }
+        }
+        stage('build package') {
+            steps {
+               sh 'mvn package'
+               
+            }
+        }
+         stage('Trivy FS scan') {
+            steps {
+            sh " trivy fs --format table -o fs.html ."
+               
+            }
+        }
+         stage('Sonarqube Analysis') {
+            steps {
+            withSonarQubeEnv( 'sonar-server') {
+                sh ''' $SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=Raslen -Dsonar.projectKey=Raslen \
+                        -Dsonar.java.binaries=target '''
+}
+               
+            }
+        }
+        
+    }
+}
