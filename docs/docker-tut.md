@@ -1,4 +1,4 @@
- DOCKER WITH JENKINS
+DAY-8 | DOCKER WITH JENKINS
 Docker is an open-source platform that allows you to automate the deployment, scaling, and management of applications using containerization. Containers provide a lightweight and portable way to package applications and their dependencies, enabling them to run consistently across different environments. Sure! Here's the provided content converted into a GitHub README.md format:
 
 Real-World Scenario: Development and Deployment of a Web Application using Docker
