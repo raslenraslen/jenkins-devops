@@ -1,0 +1,18 @@
+---
+- name: Installer et démarrer nginx
+  hosts: 192.168.1.10
+  become: yes  # Exécution avec privilèges administratifs
+  
+  tasks:
+    # 1. Installer nginx
+    - name: Installer nginx
+      apt:
+        name: nginx
+        state: present  # Assure que nginx est installé
+    
+    # 2. Démarrer nginx
+    - name: Démarrer nginx
+      service:
+        name: nginx
+        state: started  # Démarre le service nginx
+        enabled: yes   # S'assure que nginx démarre au démarrage
