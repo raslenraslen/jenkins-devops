@@ -30,8 +30,11 @@ Exemple : Si tu veux savoir où se trouve un pod ou quelle version d’une appli
 ## Api server 
 
 Imagine une situation dans un bureau :
+
 Tu veux faire quelque chose dans le bureau (par exemple, obtenir des informations ou demander quelque chose à un collègue).
 Mais au lieu d’aller directement à chaque collègue, tu passes par un réceptionniste qui va s’assurer que ta demande soit envoyée à la bonne personne dans le bureau.
+
 Maintenant, applique ça à Kubernetes :
+
 Quand tu veux déployer une application ou vérifier l'état du cluster, tu envoies une requête à l'API Server.
 L'API Server reçoit ta demande et la transmet à d'autres parties du système pour qu'elles puissent y répondre. Par exemple, il peut envoyer la demande au Scheduler pour savoir où déployer l'application, ou au Controller Manager pour s'assurer que tout est en ordre.
