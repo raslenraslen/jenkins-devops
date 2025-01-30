@@ -17,3 +17,8 @@ Tu dois surveiller en permanence pour t'assurer que tout fonctionne bien.
 Si ton conteneur plante, Kubernetes le redémarre tout seul.
 Si ton site web devient trop populaire, Kubernetes crée automatiquement des copies du conteneur pour gérer la charge.
 Kubernetes surveille tout pour toi, et tu n'as pas besoin d'intervenir.
+
+
+## source  
+le k8s est créé par Google .. mais il est managed maintenant par CNCF
+
