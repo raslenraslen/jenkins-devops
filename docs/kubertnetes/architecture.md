@@ -6,6 +6,13 @@ Nœud Master (ou Control Plane)
 
 Nœud Worker
 
- ##Le Nœud Master (Le cerveau)
+# le noeud Master
 Le Nœud Master est comme le "cerveau" du système. Il gère les nœuds Worker et contrôle tout.
 Il indique aux nœuds Worker quelles applications exécuter et où les exécuter.
+
+Les processus principeaux dans le noeud master sont :  Api server , Controller manager , scheduler et le etcd 
+
+Scheduler :
+
+Rôle : Le Scheduler est responsable de la planification des tâches. Lorsqu'une tâche (comme déployer une application) doit être exécutée, le Scheduler détermine sur quel Nœud Worker la tâche sera effectuée en fonction de la capacité disponible (mémoire, CPU, etc.).
+Exemple : Si une application nécessite beaucoup de ressources, le Scheduler va l'envoyer sur un Nœud Worker qui a assez de mémoire et de puissance CPU.
