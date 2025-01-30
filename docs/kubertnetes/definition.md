@@ -55,30 +55,48 @@ Kubernetes attend que l’application soit 100% prête avant d’envoyer des vis
 Imaginons que tu gères un site e-commerce où les utilisateurs viennent acheter des produits en ligne. Ton application tourne dans un container sur un serveur.
 
 🎯 Problème sans Kubernetes :
+
 1️⃣ Si l’application plante, elle reste indisponible ❌
+
 2️⃣ Si trop de visiteurs viennent en même temps, le site rame ⚠️
+
 3️⃣ Tu dois surveiller manuellement l’application 24h/24 😩
 
 ✅ Solution avec Kubernetes :
+
 ✅ Surveillance automatique 🕵️
 
+
 Kubernetes surveille ton application 24h/24
+
 Si l’application plante, Kubernetes la redémarre automatiquement
+
 ✅ Scalabilité (Gestion de la charge) 📈
 
 Un jour, une promotion spéciale attire 1000 visiteurs en même temps
+
 Kubernetes détecte l’augmentation du trafic et crée automatiquement plusieurs copies du container
+
 Le site continue de fonctionner sans ralentissement
+
 ✅ Équilibrage de charge ⚖️
 
+
+
 Kubernetes répartit le trafic entre les différents containers
+
 Chaque utilisateur accède au site sans problème
+
 ✅ Déploiement simplifié ⚙️
 
 Tu veux mettre à jour ton site sans l’arrêter
+
 Kubernetes remplace l’ancienne version par la nouvelle sans interruption
+
 🎬 Résumé du scénario :
+
 🔹 Sans Kubernetes → Ton site peut planter ou ralentir, et tu dois tout gérer à la main.
+
 🔹 Avec Kubernetes → Le site se répare tout seul, s’adapte au trafic et gère automatiquement les mises à jour.
 
 Tu veux un schéma pour mieux visualiser ça ? 😊
