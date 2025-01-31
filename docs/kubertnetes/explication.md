@@ -21,7 +21,7 @@ Utilisation :
 Interagir avec le cluster Kubernetes : kubectl est utilisé pour gérer et contrôler les ressources dans Kubernetes comme les pods, services, déploiements, etc.
 Commandes courantes :
 
-kubectl get pods : Pour obtenir la liste des pods exécutés dans le cluster.
+<p style="color: red;">kubectl get pods :</p> Pour obtenir la liste des pods exécutés dans le cluster.
 
 kubectl apply -f <file>.yaml : Pour appliquer des configurations de ressources à partir d'un fichier YAML.
 
