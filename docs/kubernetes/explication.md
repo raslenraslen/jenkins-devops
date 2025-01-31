@@ -19,4 +19,4 @@ kifeh si ala ?
 
 lezemk tziid el signing key for each node 
 
-<span  style= "color:red"> curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg  </span>
+<span  style="color:red"> curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg  </span>
