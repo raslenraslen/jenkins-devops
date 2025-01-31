@@ -39,3 +39,39 @@ Dès que ta demande arrive :
 
 À ce stade, ton application est en train de fonctionner 🎉.
 
+## 5️⃣ Étape 5 : Kubernetes configure le réseau
+
+🔗 Kube-proxy met en place les règles réseau pour que :
+
+✅ Tes Pods puissent communiquer entre eux.
+
+✅ Les utilisateurs puissent accéder à ton application depuis l’extérieur (si tu as défini un Service).
+
+##6️⃣ Étape 6 : Kubernetes surveille ton application
+
+👀 Le Controller vérifie en permanence que ton application tourne bien.
+
+🚨 Si un Pod tombe en panne, il le relance automatiquement.
+
+
+## 📌 Exemple dans ton projet de gestion des employés
+Imagine que ton application est déployée sur Kubernetes :
+
+1️⃣ Ton application Web tourne dans un Pod.
+
+2️⃣ La base de données (MySQL ou PostgreSQL) tourne dans un autre Pod.
+
+3️⃣ Les utilisateurs doivent accéder à l’application via un navigateur.
+
+Sans Kube-Proxy ❌
+
+🚨 Ton application ne pourrait pas parler avec la base de données.
+
+🚨 Les utilisateurs ne pourraient pas accéder à ton application.
+
+Avec Kube-Proxy ✅
+
+✅ Ton application peut interagir avec la base de données.
+
+✅ Les utilisateurs peuvent accéder à ton application via un Service.
+
