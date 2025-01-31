@@ -31,3 +31,52 @@ sudo apt-mark hold kubeadm kubelet kubectl
 
 kubeadm version
 
+## activate necessary ports 
+
+sudo firewall-cmd --permanent --add-port=6443/tcp
+
+sudo firewall-cmd --permanent --add-port=2379-2380/tcp
+
+
+sudo firewall-cmd --permanent --add-port=10250/tcp
+
+sudo firewall-cmd --permanent --add-port=10251/tcp
+
+sudo firewall-cmd --permanent --add-port=10252/tcp
+
+sudo firewall-cmd --permanent --add-port=10255/tcp
+
+sudo firewall-cmd --reloadCopied!
+
+## Deploy Kubernetes
+
+## Step 1: Prepare for Kubernetes Deployment
+
+sudo swapoff -a
+
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+sudo nano /etc/modules-load.d/containerd.conf  
+
+fi wsto 7ott 
+
+overlay
+br_netfilter
+
+pour appliquer la configuration 
+
+sudo modprobe overlay
+
+sudo modprobe br_netfilter
+
+sudo nano /etc/sysctl.d/kubernetes.conf
+
+fi wsto 7ott : 
+
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+
+pour appliquer la modification 7ott 
+
+sudo sysctl --system
