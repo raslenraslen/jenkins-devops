@@ -27,3 +27,20 @@ Exemple :
 
 Frontend Pod → frontend-service → Communique avec Backend Service via une IP stable.
 Backend Pod → backend-service → Communique avec Database Service via une IP stable.
+
+
+## 3️⃣ Les Secrets :
+
+Qu'est-ce qu'un Secret ?
+
+Un Secret dans Kubernetes est un objet utilisé pour stocker des informations sensibles (comme des mots de passe, des clés API, etc.).
+Par exemple, si le Frontend doit se connecter à la Base de Données, il aura besoin du nom d'utilisateur et du mot de passe pour établir cette connexion. Ces informations ne doivent pas être stockées en clair dans les fichiers de configuration.
+Scénario :
+
+Le Frontend doit se connecter à la Base de Données, mais pour ce faire, il a besoin d'un nom d'utilisateur et d'un mot de passe. Ces informations sont stockées dans un Secret et sont injectées dans le Pod Frontend au moment de son démarrage.
+Cela garantit que les informations sensibles (comme les mots de passe) ne sont pas exposées dans le code ou les fichiers de configuration.
+
+Exemple :
+
+Secret : Contient les informations sensibles pour accéder à la base de données (par exemple, db-user, db-password).
+Le Frontend récupère ces informations via le Secret pour se connecter à la base de données.
