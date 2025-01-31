@@ -31,5 +31,11 @@ Dès que ta demande arrive :
 
 📝 Il enregistre sa décision dans etcd.
 
+## 4️⃣ Étape 4 : Kubernetes crée les Pods (applications actives)
 
+👷‍♂️ Le Kubelet (un agent qui tourne sur chaque serveur) regarde etcd, voit qu’il doit créer une nouvelle application et démarre ton application.
+
+📦 Container Runtime (Docker par exemple) démarre les conteneurs de ton application à l’intérieur des Pods.
+
+À ce stade, ton application est en train de fonctionner 🎉.
 
