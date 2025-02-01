@@ -77,4 +77,28 @@ sudo modprobe br_netfilter
 
 `````
 
+Configurez les paramètres sysctl pour Kubernetes :
+
+Créez ou modifiez le fichier /etc/sysctl.d/kubernetes.conf :
+
+````bash
+
+sudo nano /etc/sysctl.d/kubernetes.conf
+````
+
+Ajoutez les lignes suivantes :
+
+````
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+Appliquez les modifications sysctl :
+````
+
+```bash
+
+sudo sysctl --system
+````
+
+
 
