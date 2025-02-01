@@ -151,3 +151,82 @@ sudo firewall-cmd --reload
 
 ````
 
+
+## Étape 7 : Initialisation du cluster Kubernetes
+
+Réinitialisez le cluster (au cas où il y aurait une configuration précédente) :
+
+````bash
+sudo kubeadm reset -f
+````
+
+Initialisez le cluster Kubernetes avec kubeadm :
+
+````bash
+
+sudo kubeadm init --apiserver-advertise-address <VOTRE_IP> --pod-network-cidr 10.32.0.0/12
+
+````
+Remplacez <VOTRE_IP> par l'adresse IP de votre nœud master
+
+
+Configurez kubectl pour l'utilisateur courant :
+
+bash
+````
+mkdir -p $HOME/.kube
+
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+````
+
+## tape 8 : Installation du réseau Calico
+
+Déployez le réseau Calico pour Kubernetes :
+
+bash
+````
+kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml
+````
+
+## tape 9 : Vérification du cluster
+
+Vérifiez que le nœud master est prêt :
+
+bash
+````
+kubectl get node -owide
+````
+Vérifiez les pods système :
+
+bash
+````
+kubectl get pods -n kube-system
+````
+
+## Étape 10 : Ajouter des nœuds worker
+
+Générez la commande pour joindre des nœuds worker au cluster :
+
+bash
+````
+sudo kubeadm token create --print-join-command
+````
+Exécutez la commande générée sur chaque nœud worker.
+
+## Étape 11 : Vérification finale
+
+Vérifiez les nœuds du cluster :
+
+bash
+````
+kubectl get nodes
+Vérifiez les pods système :
+````
+bash
+````
+kubectl get pods -n kube-system
+
+````
