@@ -47,8 +47,34 @@ sudo apt install kubeadm kubelet kubectl
 ````
 Marquez ces paquets pour éviter les mises à jour non désirées :
 
-bash
-````
+ ````bash
+
 sudo apt-mark hold kubeadm kubelet kubectl
 ````
+
+## Étape 4 : Configuration du système pour Kubernetes
+
+Désactivez le swap :
+
+````bash
+
+sudo swapoff -a
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+
+````
+````
+sudo nano /etc/modules-load.d/containerd.conf
+````
+
+t7tt fi wsto assemi les modules   (overlay , br_netfilter ) 
+
+appliquer les modifications  
+
+```` bash
+
+sudo modprobe overlay
+sudo modprobe br_netfilter
+
+`````
+
 
