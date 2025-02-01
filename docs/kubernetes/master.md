@@ -101,4 +101,36 @@ sudo sysctl --system
 ````
 
 
+## Étape 5 : Configuration de containerd
+
+Générez la configuration par défaut de containerd :
+
+````bash
+
+sudo containerd config default | sudo tee /etc/containerd/config.toml
+````
+
+Modifiez le fichier config.toml pour activer SystemdCgroup :
+
+````bash
+
+sudo nano /etc/containerd/config.toml
+
+````
+Remplacez :
+
+
+SystemdCgroup = false
+
+Par :
+
+
+SystemdCgroup = true
+
+Redémarrez containerd :
+
+````
+sudo systemctl restart containerd
+
+````
 
