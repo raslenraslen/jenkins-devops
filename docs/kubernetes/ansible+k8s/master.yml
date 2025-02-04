@@ -1,10 +1,10 @@
 ---
 - name: Initialize Kubernetes Master
-  hosts: k8s_master
+  hosts: master
   become: yes
   tasks:
     - name: Initialize Kubernetes Cluster
-      command: kubeadm init --apiserver-advertise-address=192.168.100.38 --pod-network-cidr=10.32.0.0/12
+      command: kubeadm init --apiserver-advertise-address=192.168.100.22 --pod-network-cidr=10.32.0.0/12
       register: kubeadm_init
       changed_when: "'To start using your cluster' in kubeadm_init.stdout"
     - debug:
