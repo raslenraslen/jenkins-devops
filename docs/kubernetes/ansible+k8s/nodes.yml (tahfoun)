@@ -1,0 +1,165 @@
+---
+- name: Setup Prerequisites To Install Kubernetes
+  hosts: master, worker
+  become: true
+  vars:
+    kube_prereq_packages: [curl, ca-certificates, apt-transport-https]
+    kube_packages: [kubeadm, kubectl, kubelet]
+
+  tasks:
+    - name: Test Reachability
+      ansible.builtin.ping:
+
+    - name: Update Cache
+      ansible.builtin.apt:
+        update_cache: true
+        autoclean: true
+
+    - name: Upgrade All Packages to the latest
+      ansible.builtin.apt:
+        upgrade: "full"
+
+    - name: Install Qemu-Guest-Agent
+      ansible.builtin.apt:
+        name: qemu-guest-agent
+        state: present
+
+    - name: Setup Docker Runtime
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+
+    - name: Start Docker If Stopped
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Disable Swap
+      ansible.builtin.command: swapoff -a
+      register: output
+      changed_when: output.rc != 0
+      tags:
+        - disable_swap
+
+    - name: Disable Swap permanently
+      ansible.builtin.replace:
+        path: /etc/fstab
+        regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+        replace: '# \1'
+      tags:
+        - disable_swap
+
+    - name: Enable IPv4 Bridging
+      ansible.builtin.replace:
+        path: /etc/sysctl.conf
+        regexp: '^#net\.ipv4\.ip_forward=1$'
+        replace: 'net.ipv4.ip_forward=1'
+
+    - name: Delete k8s Config If Exists
+      ansible.builtin.file:
+        path: /etc/modules-load.d/k8s.conf
+        state: absent
+      tags:
+        - kube_config
+
+    - name: Add k8s.config and Edit It
+      ansible.builtin.lineinfile:
+        path: /etc/modules-load.d/k8s.conf
+        line: br_netfilter
+        create: true
+        mode: '0755'
+      tags:
+        - kube_config
+
+    - name: Update Cache
+      ansible.builtin.apt:
+        update_cache: true
+        autoclean: true
+      tags:
+        - install_pre_kube_packages
+
+    - name: Remove apt lock file
+      ansible.builtin.file:
+        state: absent
+        path: "/var/lib/dpkg/lock"
+      tags:
+        - install_pre_kube_packages
+
+    - name: Install Prerequisite Packages
+      ansible.builtin.apt:
+        name: "{{ kube_prereq_packages }}"
+        state: present
+      tags:
+        - install_pre_kube_packages
+
+    - name: Remove GPG Keys If They Exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /usr/share/keyrings/kubernetes-apt-keyring.gpg
+        - /usr/share/keyrings/kubernetes-apt-keyring.gpg_armored
+      tags:
+        - install_pre_kube_packages
+
+    - name: Download Kubernetes APT Key
+      ansible.builtin.get_url:
+        url: https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key
+        dest: /usr/share/keyrings/kubernetes-apt-keyring.gpg_armored
+        mode: '0755'
+      tags:
+        - install_pre_kube_packages
+
+    - name: De-Armor Kubernetes APT Key
+      ansible.builtin.shell: gpg --dearmor < /usr/share/keyrings/kubernetes-apt-keyring.gpg_armored > /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      no_log: true
+      args:
+        creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+      tags:
+        - install_pre_kube_packages
+
+    - name: Add Kubernetes APT Repository
+      ansible.builtin.shell: |
+        set -o pipefail
+        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' \
+        | sudo tee /etc/apt/sources.list.d/kubernetes.list
+      register: apt_output
+      changed_when: apt_output.rc != 0
+      args:
+        executable: /bin/bash
+      tags:
+        - install_pre_kube_packages
+
+    - name: Update Cache
+      ansible.builtin.apt:
+        update_cache: true
+        autoclean: true
+      tags:
+        - install_kube_packages
+
+    - name: Remove apt lock file
+      ansible.builtin.file:
+        state: absent
+        path: "/var/lib/dpkg/lock"
+      tags:
+        - install_kube_packages
+
+    - name: Install Required Kubernetes Packages
+      ansible.builtin.apt:
+        name: "{{ kube_packages }}"
+        state: present
+      tags:
+        - install_kube_packages
+
+    - name: Hold Kubernetes Packages
+      ansible.builtin.dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop: "{{ kube_packages }}"
+      tags:
+        - install_kube_packages
+
+    - name: Prompt To Continue Configuring Master Nodes
+      ansible.builtin.pause:
+        prompt: "Press RETURN when you want to continue configuring the Master nodes!"
