@@ -1,0 +1,10 @@
+[all:vars]
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+ansible_ssh_common_args="-o ControlPath=/tmp/ssh_mux_%h_%p_%r"
+
+[controllers]
+controller-1 ansible_host=192.168.100.243 ansible_user=ubuntu
+
+[workers]
+#worker-1 ansible_host=192.168.1.183 ansible_user=ubuntu
+worker-2 ansible_host=192.168.100.160
