@@ -49,3 +49,17 @@ kubectl exec -it <pod-name> -- /bin/bash
 <pod-name> : C'est le nom du pod dans lequel tu veux te connecter. Par exemple, mypod.
 
 -- /bin/bash : Cela indique que tu veux ouvrir un terminal Bash dans le conteneur.
+
+
+##  6. Retrieve the IP address of the Pod `mypod`.
+````bash
+kubectl get pods -o wide -n picloud
+
+````
+
+
+````bash
+kubectl get pod mypod -o wide -n picloud
+
+
+````
