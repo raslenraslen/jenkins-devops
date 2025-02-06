@@ -35,3 +35,14 @@ kubectl top pod mypod -n picloud
 
 
 ````
+
+## Log into the container
+
+````bash
+kubectl exec -it <pod-name> -- /bin/bash
+
+````
+-i : Pour rendre l'entrée interactive (tu peux taper des commandes).
+-t : Pour allouer un terminal (affichage amélioré).
+<pod-name> : C'est le nom du pod dans lequel tu veux te connecter. Par exemple, mypod.
+-- /bin/bash : Cela indique que tu veux ouvrir un terminal Bash dans le conteneur.
