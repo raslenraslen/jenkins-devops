@@ -61,5 +61,12 @@ kubectl get pods -o wide -n picloud
 ````bash
 kubectl get pod mypod -o wide -n picloud
 
+````
 
+
+## Delete the pod inside an namespace 
+
+
+````bash
+kubectl delete pod mypod --namespace picloud 
 ````
