@@ -20,3 +20,18 @@ kubectl get events -n picloud
 ````bash
 kubectl describe pod mypod  -n picloud
 ````
+##  Voir uniquement l'état du pod (Running, Pending, etc.)
+
+````bash
+kubectl get pod mypod -n picloud
+
+````
+
+##  Voir les statistiques du pod (CPU et mémoire)
+
+
+````bash
+kubectl top pod mypod -n picloud
+
+
+````
