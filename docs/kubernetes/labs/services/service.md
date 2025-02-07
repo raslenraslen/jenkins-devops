@@ -13,9 +13,12 @@ kubectl create service clusterip myapp --tcp=80:80
 
 ````
 
+
 Avec un sélecteur, seuls les Pods correspondant à ce sélecteur sont ajoutés au service.
 
+
 Sans sélecteur, aucun Pod n'est ajouté par défaut.
+
 
 ## les objectif de la creation d'un service 
 
