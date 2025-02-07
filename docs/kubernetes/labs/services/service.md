@@ -42,3 +42,5 @@ Solution : Le Service permet au frontend d’accéder au backend sans se soucier
 Kubernetes peut créer plusieurs pods pour la même application (replicas: 3).
 
 Le Service répartit les requêtes entre ces pods pour éviter qu’un seul soit surchargé.
+
+
