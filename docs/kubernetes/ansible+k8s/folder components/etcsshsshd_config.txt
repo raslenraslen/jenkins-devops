@@ -1,0 +1,6 @@
+sudo nano /etc/ssh/sshd_config
+
+
+
+PasswordAuthentication no
+PubkeyAuthentication yes

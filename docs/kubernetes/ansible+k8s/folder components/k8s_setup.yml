@@ -121,14 +121,6 @@
       tags:
         - kube_config
 
-    - name: 12.1 Reboot
-      ansible.builtin.reboot:
-      register: system_reboot
-
-    - name: 12.2 Verify Reboot Success
-      ansible.builtin.ping:
-      when: system_reboot.rebooted
-
     - name: 13.1 Update Cache
       ansible.builtin.apt:
         update_cache: true
