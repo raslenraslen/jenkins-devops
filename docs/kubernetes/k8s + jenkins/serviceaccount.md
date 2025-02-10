@@ -12,3 +12,10 @@ metadata:
   namespace: default  # Namespace où l'application s'exécute, ici "default"
 
 ````
+
+
+## Qu'est-ce que ce fichier YAML fait ?
+
+Il crée un ServiceAccount dans le namespace default avec le nom my-app-service-account.
+
+Ce ServiceAccount sera utilisé par ton application pour interagir avec Kubernetes de manière sécurisée, en lui attribuant les bonnes permissions.
