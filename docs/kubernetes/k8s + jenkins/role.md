@@ -86,3 +86,8 @@ delete : Supprimer une ressource (exemple : supprimer un pod).
 ```` bash
 verbs: ["get", "list", "create", "update", "delete"]
 ````
+
+
+## Si tu veux lier ce Role à un ServiceAccount :
+
+Pour utiliser ce rôle avec un ServiceAccount spécifique ou un utilisateur, tu devras créer un RoleBinding ou ClusterRoleBinding.
