@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Git checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/raslenraslen/Ecart'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'kubernetes-admin@kubernetes', credentialsId: 'k8s-secret', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.100.59:6443') {
+      sh ' kubectl apply -f deploymentservice.yml'
+}
+                
+            }
+        }
+        stage('verify deployement ') {
+            steps {
+               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'kubernetes-admin@kubernetes', credentialsId: 'k8s-secret', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.100.59:6443') {
+      sh ' kubectl get pods '
+      sh ' kubectl get svc '
+}
+                
+            }
+        }
+    }
+}
