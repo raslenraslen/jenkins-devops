@@ -1,0 +1,35 @@
+piVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      containers:
+        - name: node-exporter
+          image: prom/node-exporter:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9100  # Port interne de Node Exporter
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-exporter
+spec:
+  selector:
+    app: node-exporter
+  ports:
+    - protocol: TCP
+      port: 9100  # Port d'accès externe
+  externalIPs:
+    - 192.168.100.59  # Adresse IP externe pour accéder à Node Exporter
+
