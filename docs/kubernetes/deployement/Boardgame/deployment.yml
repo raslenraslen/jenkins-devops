@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boardgame
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: boardgame
+  template:
+    metadata:
+      labels:
+        app: boardgame
+    spec:
+      containers:
+        - name: boardgame
+          image: raslenmissaoui061/boardgame:latest  # Vérifie que cette image existe bien sur Docker Hub
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080  # Port interne de l'application
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: boardgame
+spec:
+  selector:
+    app: boardgame
+  type: NodePort  # On utilise NodePort au lieu de externalIPs
+  ports:
+    - protocol: TCP
+      port: 8080   # Port interne au cluster
+      targetPort: 8080  # Port du conteneur
+      nodePort: 30085  # Port externe (doit être entre 30000 et 32767)
