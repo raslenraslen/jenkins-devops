@@ -1,0 +1,37 @@
+aapiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blackboxexporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blackboxexporter
+  template:
+    metadata:
+      labels:
+        app: blackboxexporter
+    spec:
+      containers:
+        - name: blackbox-exporter
+          image: prom/blackbox-exporter:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9115  # Port interne de Blackbox Exporter
+          args:
+            - "--config.file=/etc/blackbox_exporter/config.yml"  # Optionnel, pour configurer Blackbox Exporter
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blackboxexporter
+spec:
+  selector:
+    app: blackboxexporter
+  ports:
+    - protocol: TCP
+      port: 9115  # Port d'accès externe
+      targetPort: 9115  # Port de l'application
+  externalIPs:
+    - 192.168.100.59  # Adresse IP externe pour accéder à Blackbox Exporter
