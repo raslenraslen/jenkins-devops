@@ -1,0 +1,90 @@
+---
+# ConfigMap contenant la configuration de Prometheus
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+
+    scrape_configs:
+      # Scraping des pods ayant le label app=clinic
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            action: keep
+            regex: clinic
+
+      # Tentative de scraping du metrics-server dans le namespace kube-system
+      - job_name: 'metrics-server'
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names: [kube-system]
+        scheme: https
+        tls_config:
+          insecure_skip_verify: true
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_k8s_app]
+            action: keep
+            regex: metrics-server
+          # Si besoin, vous pouvez filtrer par port (par exemple 443)
+          #- source_labels: [__meta_kubernetes_pod_container_port_number]
+          #  action: keep
+          #  regex: "443"
+
+      # 2️⃣ Scraping de Node Exporter
+      - job_name: 'node-exporter'
+        static_configs:
+          - targets: ['192.168.100.59:9100']
+
+---
+# Déploiement de Prometheus
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.34.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+
+---
+# Service exposant Prometheus avec une IP externe
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
+  externalIPs:
+    - 192.168.100.59
