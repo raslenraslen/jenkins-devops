@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v2.34.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9090  # Port interne de Prometheus
+          volumeMounts:
+            - name: prometheus-config
+              mountPath: /etc/prometheus/prometheus.yml
+              subPath: prometheus.yml
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - name: http  # Nom du port pour Prometheus interne
+      protocol: TCP
+      port: 9090  # Port d'accès interne
+      targetPort: 9090
+    - name: nodeport  # Nom du port pour Prometheus externe
+      protocol: TCP
+      port: 30003  # Port d'accès externe (NodePort)
+      targetPort: 9090  # Redirige vers le port interne de Prometheus
+  type: NodePort
+  externalIPs:
+    - 192.168.100.243  # Adresse IP externe pour accéder à Prometheus
+
+
+
+
