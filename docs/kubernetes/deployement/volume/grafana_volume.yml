@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000  # Port interne de Grafana
+          volumeMounts:
+            - mountPath: "/var/lib/grafana"  # Chemin où Grafana stocke les données
+              name: grafana-storage  # Nom du volume
+      volumes:
+        - name: grafana-storage
+          persistentVolumeClaim:
+            claimName: pvc-nfs  # Nom du PVC que tu as créé
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  selector:
+    app: grafana
+  type: NodePort  # Utilisation de NodePort comme dans boardgame
+  ports:
+    - protocol: TCP
+      port: 3000   # Port interne au cluster
+      targetPort: 3000  # Port du conteneur
+      nodePort: 32000  # Port externe (doit être entre 30000 et 32767)
