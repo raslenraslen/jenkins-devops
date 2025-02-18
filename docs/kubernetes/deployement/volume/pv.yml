@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs
+spec:
+  capacity:
+    storage: 1Gi  # Taille du volume
+  accessModes:
+    - ReadWriteMany  # Permet à plusieurs pods d'écrire et lire
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /data/config  # Chemin du dossier NFS
+    server: 192.168.100.243  # Remplace par l'IP de ton serveur NFS
