@@ -1,55 +1,67 @@
-apiVersion: v1
-kind: ConfigMap
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: prometheus-config
-data:
-  prometheus.yml: |
-    global:
-      scrape_interval: 15s
+  name: cadvisor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cadvisor
+  template:
+    metadata:
+      labels:
+        app: cadvisor
+    spec:
+      containers:
+        - name: cadvisor
+          image: gcr.io/cadvisor/cadvisor:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: rootfs
+              mountPath: /rootfs
+              readOnly: true
+            - name: var-run
+              mountPath: /var/run
+              readOnly: false
+            - name: sys
+              mountPath: /sys
+              readOnly: true
+            - name: docker
+              mountPath: /var/lib/docker
+              readOnly: true
+            - name: cgroup
+              mountPath: /cgroup
+              readOnly: true
+      volumes:
+        - name: rootfs
+          hostPath:
+            path: /
+        - name: var-run
+          hostPath:
+            path: /var/run
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: docker
+          hostPath:
+            path: /var/lib/docker
+        - name: cgroup
+          hostPath:
+            path: /sys/fs/cgroup
 
-    scrape_configs:
-      # Scraping de Prometheus
-      - job_name: 'prometheus'
-        static_configs:
-          - targets: ["192.168.100.243:30003"]  # Remplacez par l'adresse IP et le NodePort de Prometheus
-
-      # Scraping du Node Exporter
-      - job_name: 'node-exporter'
-        static_configs:
-          - targets: ['192.168.100.243:30001']  # Remplacez par l'adresse IP et le NodePort de Node Exporter
-          - targets: ['192.168.100.160:30001']
-
-      # Scraping du Blackbox Exporter
-      - job_name: 'blackbox'
-        metrics_path: /probe
-        params:
-          module: [http_2xx]  # Look for a HTTP 200 response.
-        static_configs:
-          - targets:
-              - http://192.168.100.243:30085
-        relabel_configs:
-          - source_labels: [__address__]
-            target_label: __param_target
-          - source_labels: [__param_target]
-            target_label: instance
-          - target_label: __address__
-            replacement: 192.168.100.243:31115  # The blackbox exporter's real hostname:port.
-
-      # Scraping du Metrics Server
-      - job_name: 'metrics-server'
-        metrics_path: /metrics
-        scheme: http
-        static_configs:
-          - targets: ['metrics-server.kube-system.svc:443']
-        tls_config:
-          insecure_skip_verify: true   # Désactiver la vérification du certificat (à ne faire que dans un environnement contrôlé)
-        relabel_configs:
-          - source_labels: [__param_target]
-            target_label: instance
-          - target_label: __address__
-            replacement: 'metrics-server.kube-system.svc:443'
-
-      # Scraping de cAdvisor (Ajouté)
-      - job_name: 'cadvisor'
-        static_configs:
-          - targets: ['192.168.100.243:30089']  # Remplace avec l'IP et le NodePort de cAdvisor
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cadvisor
+spec:
+  selector:
+    app: cadvisor
+  type: NodePort  # Expose cAdvisor via un port sur chaque nœud du cluster
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30089  # Port accessible depuis l'extérieur du cluster
