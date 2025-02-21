@@ -19,13 +19,14 @@ data:
             regex: clinic
 
 ---
-# Déploiement de Prometheus
+# DaemonSet pour déployer Prometheus sur tous les nœuds
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: prometheus
+  labels:
+    app: prometheus  # Ajout d'un label pour la sélection dans le service
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: prometheus
@@ -50,7 +51,7 @@ spec:
             name: prometheus-config
 
 ---
-# Service pour exposer Prometheus
+# Service pour exposer Prometheus en NodePort
 apiVersion: v1
 kind: Service
 metadata:
@@ -62,5 +63,7 @@ spec:
     - protocol: TCP
       port: 9090
       targetPort: 9090
-  externalIPs:
-    - 192.168.100.59
+      nodePort: 30090  # Choisissez un numéro de port dans la plage des NodePort (30000-32767)
+  type: NodePort  # Définit le type du service comme NodePort
+  selector:
+    app: prometheus  # Ajout du selector pour faire correspondre avec le DaemonSet
