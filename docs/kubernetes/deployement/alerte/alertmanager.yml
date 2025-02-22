@@ -1,0 +1,26 @@
+global:
+  resolve_timeout: 5m  # Temps avant que l'alerte soit résolue
+
+route:
+  group_by: ['alertname']  # Grouper les alertes par 'alertname'
+  group_wait: 10s  # Temps d'attente avant d'envoyer le groupe d'alertes
+  group_interval: 5m  # Intervalle entre deux groupes d'alertes
+  repeat_interval: 3h  # Répéter les alertes non résolues tous les 3h
+  receiver: 'email_receiver'  # Envoyer les alertes à 'email_receiver'
+
+receivers:
+  - name: 'email_receiver'
+    email_configs:
+      - to: 'your-email@example.com'  # Adresse e-mail de destination
+        from: 'alertmanager@example.com'  # Adresse e-mail de l'expéditeur
+        smarthost: 'smtp.example.com:587'  # Serveur SMTP
+        auth_username: 'your-smtp-username'
+        auth_password: 'your-smtp-password'
+
+# Optionnel: Gérer les silences (périodes où les alertes sont ignorées)
+silences:
+  - matchers: ['alertname="InstanceDown"']
+    startsAt: '2025-01-01T00:00:00Z'
+    endsAt: '2025-01-01T01:00:00Z'
+    createdBy: 'user'
+    comment: 'Maintenance'
