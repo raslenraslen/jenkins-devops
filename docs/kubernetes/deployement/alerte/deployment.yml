@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      containers:
+        - name: alertmanager
+          image: prom/alertmanager:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9093  # Port interne de Alertmanager
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager
+spec:
+  selector:
+    app: alertmanager
+  ports:
+    - protocol: TCP
+      port: 9093  # Port d'accès externe
+  externalIPs:
+    - 192.168.100.64  # Adresse IP externe pour accéder à Alertmanager
