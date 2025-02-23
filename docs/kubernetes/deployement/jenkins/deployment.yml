@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+        - name: jenkins
+          image: jenkins/jenkins:lts
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080  # Port interne du conteneur pour Jenkins
+          env:
+            - name: JENKINS_OPTS
+              value: "--httpPort=8080"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins
+spec:
+  selector:
+    app: jenkins
+  type: NodePort  # Exposer Jenkins avec un NodePort
+  ports:
+    - name: http  # Nom du port
+      protocol: TCP
+      port: 8080   # Port interne dans le cluster
+      targetPort: 8080  # Port du conteneur
+      nodePort: 30072  # Port externe pour accéder à Jenkins
