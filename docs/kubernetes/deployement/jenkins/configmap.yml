@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: >
+    global:
+      scrape_interval: 15s
+
+    scrape_configs:
+      # Scraping de Prometheus
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ["192.168.100.64:30136"]  # Remplacez par l'adresse IP et le NodePort de Prometheus
+
+      # Scraping du Node Exporter
+      - job_name: 'node-exporter'
+        static_configs:
+          - targets: 
+              - '192.168.100.64:31000'
+              - '192.168.100.66:31000'
+              - '192.168.100.65:31000'
+
+      # Scraping du Blackbox Exporter
+      - job_name: 'blackbox'
+        metrics_path: /probe
+        params:
+          module: [http_2xx]  # Look for a HTTP 200 response.
+        static_configs:
+          - targets:
+              - http://192.168.100.64:30085
+              - http://192.168.100.64:30099
+              - https://github.com/raslenraslen
+        relabel_configs:
+          - source_labels: [__address__]
+            target_label: __param_target
+          - source_labels: [__param_target]
+            target_label: instance
+          - target_label: __address__
+            replacement: 192.168.100.64:30115  # The blackbox exporter's real hostname:port.
+      
+      # Scraping de cAdvisor (Ajouté)
+      - job_name: 'cadvisor'
+        static_configs:
+          - targets: ['192.168.100.64:30089']
+
+      # Scraping de Jenkins
+      - job_name: 'jenkins'
+        static_configs:
+          - targets:
+              - '192.168.100.64:8080'  # Remplacez par l'IP et le NodePort de Jenkins
+        metrics_path: '/prometheus'
+
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+                - '192.168.100.64:9093'  # Adresse de ton serveur Alertmanager (modifie selon ton setup)
+
+    rule_files:
+      - "alert_rules.yml"
