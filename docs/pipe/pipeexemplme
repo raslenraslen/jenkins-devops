@@ -1,44 +1,44 @@
 pipeline {
     agent any
-    tools { 
-        jdk 'JDK'
-        maven 'Maven3' }
     
-    environment {
+    tools {
+        maven 'Maven3'
+        jdk 'JDK'
+    }
+      environment {
         
         SONAR_HOME = tool 'sonar-scanner'
     }
     
-    
-    
-    stages {
-        stage('Git checkout') {
+
+    stages { 
+        
+         stage('Git checkout') {
             steps {
-               git branch: 'main', url: 'https://github.com/jaiswaladi246/FullStack-Blogging-App.git'
+                git branch: 'main', url: 'https://github.com/raslenraslen/application-pipeline.git'
             }
         }
-         stage('compile') {
+        stage('Compile') {
             steps {
-               sh 'mvn compile'
-               
+               sh "mvn compile"
             }
         }
-        stage('test') {
+        
+        stage('Test') {
             steps {
-               sh 'mvn test'
-               
+                sh "mvn test"
             }
         }
-        stage('build package') {
+        
+        stage('Build') {
             steps {
-               sh 'mvn package'
-               
+                sh "mvn package"
             }
         }
-         stage('Trivy FS scan') {
+          stage('Trivy FS scan') {
             steps {
             sh " trivy fs --format table -o fs.html ."
-               
+                archiveArtifacts artifacts: 'fs.html', fingerprint: true
             }
         }
          stage('Sonarqube Analysis') {
@@ -50,6 +50,13 @@ pipeline {
                
             }
         }
-        
+        stage('Publish to Nexus') {
+            steps {
+                configFileProvider([configFile(fileId: 'fb0f3413-0523-47bb-b0cc-fe2e4c17124b', variable: 'mavensettings')]) {
+                    
+                    sh 'mvn -s "$mavensettings" clean deploy'
+                }
+            }
+        }
     }
 }
