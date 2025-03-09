@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app.kubernetes.io/component":"server","app.kubernetes.io/name":"argocd-server","app.kubernetes.io/part-of":"argocd"},"name":"argocd-server","namespace":"default"},"spec":{"ports":[{"name":"http","port":80,"protocol":"TCP","targetPort":8080},{"name":"https","port":443,"protocol":"TCP","targetPort":8080}],"selector":{"app.kubernetes.io/name":"argocd-server"}}}
+  creationTimestamp: "2025-03-09T11:04:01Z"
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+  name: argocd-server
+  namespace: default
+  resourceVersion: "81207"
+  uid: ea4d8b6c-4003-4030-890a-f18ad57f95be
+spec:
+  clusterIP: 10.108.104.255
+  clusterIPs:
+  - 10.108.104.255
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/name: argocd-server
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}
